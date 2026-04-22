@@ -4,6 +4,38 @@ const {
     environmentalScripts
 } = require("../../config/config");
 
+function buildValidatedUrl(baseUrl, symbol) {
+    try {
+        // Minimal path validation
+        if (baseUrl.includes('/../') || /\/%2e%2e\//i.test(baseUrl)) {
+            throw new Error('Invalid path');
+        }
+        
+        const url = new URL(baseUrl);
+        
+        // Protocol + host checks
+        const allowedDomains = ['example.com']; // add your allowed domains here
+        if (!allowedDomains.includes(url.hostname)) {
+            throw new Error('Invalid host');
+        }
+        if (!['http:', 'https:'].includes(url.protocol)) {
+            throw new Error('Invalid protocol');
+        }
+        
+        // Validate path parameters
+        if (!/^[A-Za-z0-9_-]+$/.test(symbol)) {
+            throw new Error('Invalid parameter');
+        }
+        
+        // Append symbol as path segment
+        url.pathname = url.pathname + symbol;
+        
+        return url.href;
+    } catch {
+        throw new Error('Invalid URL');
+    }
+}
+
 function ResearchHandler(db) {
     "use strict";
 
@@ -12,7 +44,7 @@ function ResearchHandler(db) {
     this.displayResearch = (req, res) => {
 
         if (req.query.symbol) {
-            const url = req.query.url + req.query.symbol;
+            const url = buildValidatedUrl(req.query.url, req.query.symbol);
             return needle.get(url, (error, newResponse, body) => {
                 if (!error && newResponse.statusCode === 200) {
                     res.writeHead(200, {
