@@ -61,5 +61,19 @@
     "zaproxy": "^0.2.0"
   },
   "repository": "https://github.com/OWASP/NodejsGoat",
-  "license": "Apache 2.0"
+  "license": "Apache 2.0",
+  "overrides": {
+    "body-parser": {
+      "qs": "https://npm.aikido.io/4491fd4ad7394054217/qs@6.5.2-aikido.2"
+    },
+    "request": {
+      "qs": "https://npm.aikido.io/4491fd4ad7394054217/qs@6.5.2-aikido.2"
+    },
+    "express": {
+      "qs": "https://npm.aikido.io/4491fd4ad7394054217/qs@6.5.2-aikido.2"
+    },
+    "tiny-lr": {
+      "qs": "https://npm.aikido.io/4491fd4ad7394054217/qs@6.5.2-aikido.2"
+    }
+  }
 }
